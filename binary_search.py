@@ -133,8 +133,8 @@ def argmin(f, lo, hi, epsilon=1e-3):
         if hi - lo < epsilon:
             return hi 
 
-        m1 = lo + (hi-lo)/4
-        m2 = hi - (hi-lo)/2
+        m1 = lo + (hi-lo)/6
+        m2 = hi - (hi-lo)/3
 
         if f(m1) < f(m2):
             return rec_arg(lo, m2)
