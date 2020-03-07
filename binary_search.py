@@ -80,26 +80,25 @@ def count_repeats(xs, x):
         elif xs[mid] > x:
             return greater_than(mid + 1, right)
         elif xs[mid] < x:
-            greater_than(left, mid - 1)
+            return greater_than(left, mid - 1)
 
     def less_than(left, right):
         mid = (left + right)//2
         
-        if xs[mid] == x:
-            try:
-                if x > xs[mid + 1] or len(xs) - 1 == mid:
-                    return mid
+        try:
+            if xs[mid] == x:
+                if x > xs[mid + 1] or (len(xs) - 1) == mid:
+                    return mid  
                 else:
                     return less_than(mid+1, right)
-            except IndexError:
-                return mid
+        except IndexError:
+            return mid
         if left == right:
             return None
         elif xs[mid] > x:
             return less_than(mid + 1, right)
         elif xs[mid] < x:
             return less_than(left, mid - 1)
-
     greater = greater_than(left, right)
     less = less_than(left, right)
 
