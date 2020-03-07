@@ -17,7 +17,29 @@ def find_smallest_positive(xs):
     >>> find_smallest_positive([-3, -2, -1]) is None
     True
     '''
+    left = 0
+    right = len(xs) - 1
+    
+    if not xs:
+        return None
+    if xs[0] > 0:
+        return 0
+    
+    def recursive_search(left, right):
+        mid = (left + right)//2
+        if xs[mid] == 0:
+            return mid + 1
+        if left == right:
+            if xs[mid] > 0:
+                return mid
+            else:
+                return None
+        elif xs[mid] > 0:
+            return recursive_search(left, mid-1)
+        elif xs[mid] < 0:
+            return recursive_search(mid + 1, right)
 
+    return recursive_search(left, right)
 
 def count_repeats(xs, x):
     '''
@@ -39,7 +61,52 @@ def count_repeats(xs, x):
     >>> count_repeats([3, 2, 1], 4)
     0
     '''
+    if not xs:
+        return 0
 
+    left = 0 
+    right = len(xs) - 1
+    
+    def greater_than(left, right):
+        mid = (left + right)//2
+        
+        if xs[mid] == x:
+            if mid == 0 or xs[mid-1] > x:
+                return mid
+            else:
+                return greater_than(left, mid-1)
+        elif left == right:
+            return None
+        elif xs[mid] > x:
+            return greater_than(mid + 1, right)
+        elif xs[mid] < x:
+            greater_than(left, mid - 1)
+
+    def less_than(left, right):
+        mid = (left + right)//2
+        
+        if xs[mid] == x:
+            try:
+                if x > xs[mid + 1] or len(xs) - 1 == mid:
+                    return mid
+                else:
+                    return less_than(mid+1, right)
+            except IndexError:
+                return mid
+        if left == right:
+            return None
+        elif xs[mid] > x:
+            return less_than(mid + 1, right)
+        elif xs[mid] < x:
+            return less_than(left, mid - 1)
+
+    greater = greater_than(left, right)
+    less = less_than(left, right)
+
+    if greater == None or less == None:
+        return 0
+    else:
+        return (less - greater) + 1
 
 def argmin(f, lo, hi, epsilon=1e-3):
     '''
@@ -62,3 +129,17 @@ def argmin(f, lo, hi, epsilon=1e-3):
     -0.00016935087808430278
     '''
 
+    def rec_arg(lo, hi):
+
+        if hi - lo < epsilon:
+            return hi 
+
+        m1 = lo + (hi-lo)/4
+        m2 = hi - (hi-lo)/2
+
+        if f(m1) < f(m2):
+            return rec_arg(lo, m2)
+        if f(m1) > f(m2):
+            return rec_arg(m1, hi)
+
+    return rec_arg(lo, hi)
